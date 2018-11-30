@@ -1,0 +1,10 @@
+.*
+*.pyc
+__pycache__/
+data
+data/
+cache/
+results/
+reports/
+venv/
+!.gitignore
