@@ -5,7 +5,11 @@ import sys
 import os
 import shutil
 import zipfile
-from urllib.request import urlretrieve
+import sys
+if sys.version_info[0] == 3:
+    from urllib.request import urlretrieve
+else:
+    from urllib import urlretrieve
 
 
 def download(url, filename):

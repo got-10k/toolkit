@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 
 import fire
 from PIL import Image
@@ -22,7 +22,7 @@ def example_track_val_set():
         subset='val',
         result_dir='results',
         report_dir='reports')
-    experiment.run(tracker, visualize=True)
+    experiment.run(tracker, visualize=False)
 
     # report performance
     experiment.report([tracker.name])

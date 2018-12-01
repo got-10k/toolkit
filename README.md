@@ -1,6 +1,6 @@
 # GOT-10k Python Toolkit
 
-This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://aitestunion.com/got-10k). For convenience, it also provides unofficial implementation of tracking pipelines for [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html) and [VOT](http://votchallenge.net) benchmarks. The code is written in pure python and is compile-free.
+This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://aitestunion.com/got-10k). For convenience, it also provides unofficial implementation of tracking pipelines for [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html) and [VOT](http://votchallenge.net) benchmarks. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
 [GOT-10k](http://aitestunion.com/got-10k) is a large, high-diversity and one-shot database for evaluating generic purposed visual trackers. If you use the GOT-10k database or toolkits for a research publication, please consider citing:
 
