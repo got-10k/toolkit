@@ -7,4 +7,7 @@ cache/
 results/
 reports/
 venv/
+build/
+dist/
+*.egg-info
 !.gitignore

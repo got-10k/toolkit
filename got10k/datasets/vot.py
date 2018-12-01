@@ -31,7 +31,6 @@ class VOT(object):
             of each sequence in ``__getitem__`` function, otherwise
             only returns ``img_files`` and ``anno``.
     """
-
     __valid_versions = [2013, 2014, 2015, 2016, 2017, 2018, 'LT2018']
 
     def __init__(self, root_dir, version=2017,

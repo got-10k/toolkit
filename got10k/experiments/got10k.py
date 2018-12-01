@@ -5,6 +5,7 @@ import numpy as np
 import glob
 import ast
 import json
+import time
 import matplotlib.pyplot as plt
 import matplotlib
 from PIL import Image
@@ -12,6 +13,7 @@ from PIL import Image
 from ..datasets import GOT10k
 from ..utils.metrics import rect_iou
 from ..utils.viz import show_frame
+from ..utils.ioutils import compress
 
 
 class ExperimentGOT10k(object):
@@ -25,18 +27,28 @@ class ExperimentGOT10k(object):
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
-
-    def __init__(self, root_dir,
+    def __init__(self, root_dir, subset='val',
                  result_dir='results', report_dir='reports'):
         super(ExperimentGOT10k, self).__init__()
-        self.dataset = GOT10k(root_dir, subset='test', return_meta=True)
+        assert subset in ['val', 'test']
+        self.subset = subset
+        self.dataset = GOT10k(root_dir, subset=subset)
         self.result_dir = os.path.join(result_dir, 'GOT-10k')
         self.report_dir = os.path.join(report_dir, 'GOT-10k')
         self.nbins_iou = 101
         self.repetitions = 3
 
     def run(self, tracker, visualize=False):
+        if self.subset == 'test':
+            print('\033[93m[WARNING]:\n'
+                  'The groundtruths of GOT-10k\'s test set is withholded.\n'
+                  'You will have to submit your results to\n'
+                  '[http://aitestunion.com/got-10k]'
+                  '\nto access the performance.\033[0m')
+            time.sleep(2)
+
         print('Running tracker %s on GOT-10k...' % tracker.name)
+        self.dataset.return_meta = False
 
         # loop over the complete dataset
         for s, (img_files, anno) in enumerate(self.dataset):
@@ -74,83 +86,108 @@ class ExperimentGOT10k(object):
     def report(self, tracker_names):
         assert isinstance(tracker_names, (list, tuple))
 
-        # assume tracker_names[0] is your tracker
-        report_dir = os.path.join(self.report_dir, tracker_names[0])
-        if not os.path.exists(report_dir):
-            os.makedirs(report_dir)
-        report_file = os.path.join(report_dir, 'performance.json')
+        if self.subset == 'test':
+            pwd = os.getcwd()
 
-        # visible ratios of all sequences
-        seq_names = self.dataset.seq_names
-        covers = {s: self.dataset[s][2]['cover'][1:] for s in seq_names}
-        
-        performance = {}
-        for name in tracker_names:
-            print('Evaluating', name)
-            ious = {}
-            times = {}
-            performance.update({name: {
-                'overall': {},
-                'seq_wise': {}}})
+            # generate compressed submission file for each tracker
+            for tracker_name in tracker_names:
+                # compress all tracking results
+                result_dir = os.path.join(self.result_dir, tracker_name)
+                os.chdir(result_dir)
+                save_file = '../%s' % tracker_name
+                compress('.', save_file)
+                print('Records saved at', save_file + '.zip')
 
-            for s, (_, anno, meta) in enumerate(self.dataset):
-                seq_name = self.dataset.seq_names[s]
-                record_files = glob.glob(os.path.join(
-                    self.result_dir, name, seq_name,
-                    '%s_[0-9]*.txt' % seq_name))
-                if len(record_files) == 0:
-                    raise Exception('Results for sequence %s not found.' % seq_name)
+            # print submission guides
+            print('\033[93mLogin and follow instructions on')
+            print('http://aitestunion.com/got-10k/submission_instructions')
+            print('to upload and evaluate your tracking results\033[0m')
 
-                # read results of all repetitions
-                boxes = [np.loadtxt(f, delimiter=',') for f in record_files]
-                assert all([b.shape == anno.shape for b in boxes])
+            # switch back to previous working directory
+            os.chdir(pwd)
 
-                # calculate and stack all ious
-                bound = ast.literal_eval(meta['resolution'])
-                seq_ious = [rect_iou(b[1:], anno[1:], bound=bound) for b in boxes]
-                # only consider valid frames where targets are visible
-                seq_ious = [t[covers[seq_name] > 0] for t in seq_ious]
-                seq_ious = np.concatenate(seq_ious)
-                ious[seq_name] = seq_ious
+            return None
+        elif self.subset == 'val':
+            # meta information is useful when evaluation
+            self.dataset.return_meta = True
 
-                # stack all tracking times
-                times[seq_name] = []
-                time_file = os.path.join(
-                    self.result_dir, name, seq_name,
-                    '%s_time.txt' % seq_name)
-                if os.path.exists(time_file):
-                    seq_times = np.loadtxt(time_file, delimiter=',')
-                    seq_times = seq_times[~np.isnan(seq_times)]
-                    seq_times = seq_times[seq_times > 0]
-                    if len(seq_times) > 0:
-                        times[seq_name] = seq_times
+            # assume tracker_names[0] is your tracker
+            report_dir = os.path.join(self.report_dir, tracker_names[0])
+            if not os.path.exists(report_dir):
+                os.makedirs(report_dir)
+            report_file = os.path.join(report_dir, 'performance.json')
 
-                # store sequence-wise performance
-                ao, sr, speed, _ = self._evaluate(seq_ious, seq_times)
-                performance[name]['seq_wise'].update({seq_name: {
+            # visible ratios of all sequences
+            seq_names = self.dataset.seq_names
+            covers = {s: self.dataset[s][2]['cover'][1:] for s in seq_names}
+            
+            performance = {}
+            for name in tracker_names:
+                print('Evaluating', name)
+                ious = {}
+                times = {}
+                performance.update({name: {
+                    'overall': {},
+                    'seq_wise': {}}})
+
+                for s, (_, anno, meta) in enumerate(self.dataset):
+                    seq_name = self.dataset.seq_names[s]
+                    record_files = glob.glob(os.path.join(
+                        self.result_dir, name, seq_name,
+                        '%s_[0-9]*.txt' % seq_name))
+                    if len(record_files) == 0:
+                        raise Exception('Results for sequence %s not found.' % seq_name)
+
+                    # read results of all repetitions
+                    boxes = [np.loadtxt(f, delimiter=',') for f in record_files]
+                    assert all([b.shape == anno.shape for b in boxes])
+
+                    # calculate and stack all ious
+                    bound = ast.literal_eval(meta['resolution'])
+                    seq_ious = [rect_iou(b[1:], anno[1:], bound=bound) for b in boxes]
+                    # only consider valid frames where targets are visible
+                    seq_ious = [t[covers[seq_name] > 0] for t in seq_ious]
+                    seq_ious = np.concatenate(seq_ious)
+                    ious[seq_name] = seq_ious
+
+                    # stack all tracking times
+                    times[seq_name] = []
+                    time_file = os.path.join(
+                        self.result_dir, name, seq_name,
+                        '%s_time.txt' % seq_name)
+                    if os.path.exists(time_file):
+                        seq_times = np.loadtxt(time_file, delimiter=',')
+                        seq_times = seq_times[~np.isnan(seq_times)]
+                        seq_times = seq_times[seq_times > 0]
+                        if len(seq_times) > 0:
+                            times[seq_name] = seq_times
+
+                    # store sequence-wise performance
+                    ao, sr, speed, _ = self._evaluate(seq_ious, seq_times)
+                    performance[name]['seq_wise'].update({seq_name: {
+                        'ao': ao,
+                        'sr': sr,
+                        'speed_fps': speed,
+                        'length': len(anno) - 1}})
+
+                ious = np.concatenate(list(ious.values()))
+                times = np.concatenate(list(times.values()))
+
+                # store overall performance
+                ao, sr, speed, succ_curve = self._evaluate(ious, times)
+                performance[name].update({'overall': {
                     'ao': ao,
                     'sr': sr,
                     'speed_fps': speed,
-                    'length': len(anno) - 1}})
+                    'succ_curve': succ_curve.tolist()}})
+            
+            # save performance
+            with open(report_file, 'w') as f:
+                json.dump(performance, f, indent=4)
+            # plot success curves
+            self._plot_curves(performance, report_dir)
 
-            ious = np.concatenate(list(ious.values()))
-            times = np.concatenate(list(times.values()))
-
-            # store overall performance
-            ao, sr, speed, succ_curve = self._evaluate(ious, times)
-            performance[name].update({'overall': {
-                'ao': ao,
-                'sr': sr,
-                'speed_fps': speed,
-                'succ_curve': succ_curve.tolist()}})
-        
-        # save performance
-        with open(report_file, 'w') as f:
-            json.dump(performance, f, indent=4)
-        # plot success curves
-        self._plot_curves(performance, report_dir)
-
-        return performance
+            return performance
 
     def show(self, tracker_names, seq_names=None, play_speed=1):
         if seq_names is None:
@@ -162,6 +199,7 @@ class ExperimentGOT10k(object):
         
         play_speed = int(round(play_speed))
         assert play_speed > 0
+        self.dataset.return_meta = False
 
         for s, seq_name in enumerate(seq_names):
             print('[%d/%d] Showing results on %s...' % (
@@ -176,7 +214,7 @@ class ExperimentGOT10k(object):
                 records[name] = np.loadtxt(record_file, delimiter=',')
             
             # loop over the sequence and display results
-            img_files, anno, _ = self.dataset[seq_name]
+            img_files, anno = self.dataset[seq_name]
             for f, img_file in enumerate(img_files):
                 if not f % play_speed == 0:
                     continue

@@ -22,7 +22,6 @@ class GOT10k(object):
             of each sequence in ``__getitem__`` function, otherwise
             only returns ``img_files`` and ``anno``.
     """
-
     def __init__(self, root_dir, subset='test', return_meta=False):
         super(GOT10k, self).__init__()
         assert subset in ['train', 'val', 'test'], 'Unknown subset.'

@@ -9,7 +9,7 @@ setup(name='got10k',
       url='https://github.com/got-10k/toolkit',
       license='MIT',
       install_requires=[
-          'numpy', 'matplotlib', 'Pillow', 'Shapely'],
+          'numpy', 'matplotlib', 'Pillow', 'Shapely', 'fire'],
       packages=find_packages(),
       keywords=[
           'GOT-10k',

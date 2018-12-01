@@ -24,7 +24,6 @@ class ImageNetVID(object):
         cache_dir (string, optional): Directory for caching the paths and annotations
             for speeding up loading. Default is ``cache/imagenet_vid``.
     """
-
     def __init__(self, root_dir, subset=('train', 'val'),
                  cache_dir='cache/imagenet_vid'):
         self.root_dir = root_dir

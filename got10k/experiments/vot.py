@@ -35,7 +35,6 @@ class ExperimentVOT(object):
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
-
     def __init__(self, root_dir, version=2017,
                  experiments=('supervised', 'unsupervised', 'realtime'),
                  result_dir='results', report_dir='reports'):

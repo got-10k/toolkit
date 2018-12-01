@@ -25,7 +25,6 @@ class OTB(object):
             and puts it in root directory. If dataset is downloaded, it is not
             downloaded again.
     """
-
     __otb13_seqs = ['Basketball', 'Bolt', 'Boy', 'Car4', 'CarDark',
                     'CarScale', 'Coke', 'Couple', 'Crossing', 'David',
                     'David2', 'David3', 'Deer', 'Dog1', 'Doll', 'Dudek',
