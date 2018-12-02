@@ -1,6 +1,6 @@
 # GOT-10k Python Toolkit
 
-This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://aitestunion.com/got-10k). For convenience, it also provides unofficial implementation of tracking pipelines for [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html) and [VOT](http://votchallenge.net) benchmarks. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
+This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://aitestunion.com/got-10k) benchmark. For convenience, it also provides unofficial implementation of tracking pipelines for [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html) and [VOT](http://votchallenge.net) benchmarks. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
 [GOT-10k](http://aitestunion.com/got-10k) is a large, high-diversity and one-shot database for evaluating generic purposed visual trackers. If you use the GOT-10k database or toolkits for a research publication, please consider citing:
 
@@ -19,7 +19,7 @@ arXiv:1810.11981, 2018.
 * [Quick Start: Jupyter Notebook for Off-the-Shelf Usage](#quick-start-jupyter-notebook-for-off-the-shelf-usage)
 * [How to Define a Tracker?](#how-to-define-a-tracker)
 * [How to Run Experiments on GOT-10k?](#how-to-run-experiments-on-got-10k)
-* [How to Evaluate the Performance?](#how-to-evaluate-the-performance)
+* [How to Evaluate Performance?](#how-to-evaluate-performance)
 * [How to Loop Over GOT-10k Dataset?](#how-to-loop-over-got-10k-dataset)
 * [Issues](#issues)
 
@@ -150,7 +150,7 @@ experiment.run(tracker, visualize=True)
 
 The tracking results will be stored in `result_dir`.
 
-### How to Evaluate the Performance?
+### How to Evaluate Performance?
 
 Use the `report` method of `ExperimentGOT10k` for this purpose:
 
