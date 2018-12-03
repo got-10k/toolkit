@@ -1,8 +1,8 @@
 # GOT-10k Python Toolkit
 
-This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://aitestunion.com/got-10k) benchmark. For convenience, it also provides unofficial implementation of tracking pipelines for [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html) and [VOT](http://votchallenge.net) benchmarks. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
+This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](https://got-10k.github.io) benchmark. For convenience, it also provides unofficial implementation of tracking pipelines for [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html) and [VOT](http://votchallenge.net) benchmarks. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
-[GOT-10k](http://aitestunion.com/got-10k) is a large, high-diversity and one-shot database for evaluating generic purposed visual trackers. If you use the GOT-10k database or toolkits for a research publication, please consider citing:
+[GOT-10k](https://got-10k.github.io) is a large, high-diversity and one-shot database for evaluating generic purposed visual trackers. If you use the GOT-10k database or toolkits for a research publication, please consider citing:
 
 ```Bibtex
 "GOT-10k: A Large High-Diversity Benchmark for Generic Object Tracking in the Wild."
@@ -10,7 +10,7 @@ L. Huang, X. Zhao and K. Huang,
 arXiv:1810.11981, 2018.
 ```
 
-&emsp;\[[Project](http://aitestunion.com/got-10k)\]\[[PDF](https://arxiv.org/abs/1810.11981)\]\[[Bibtex](http://aitestunion.com/got-10k/bibtex)\]
+&emsp;\[[Project](https://got-10k.github.io)\]\[[PDF](https://arxiv.org/abs/1810.11981)\]\[[Bibtex](https://got-10k.github.io/bibtex)\]
 
 ## Table of Contents
 
@@ -163,7 +163,7 @@ experiment.report([tracker.name])
 
 When evaluated on the __validation subset__, the scores and curves will be directly generated in `report_dir`.
 
-However, when evaluated on the __test subset__, since all groundtruths are withholded, you will have to submit your results to the [evaluation server](http://aitestunion.com/got-10k/submit_instructions) for evaluation. The `report` function will generate a `.zip` file which can be directly uploaded for submission. For more instructions, see [submission instruction](http://aitestunion.com/got-10k/submit_instructions).
+However, when evaluated on the __test subset__, since all groundtruths are withholded, you will have to submit your results to the [evaluation server](https://got-10k.github.io/submit_instructions) for evaluation. The `report` function will generate a `.zip` file which can be directly uploaded for submission. For more instructions, see [submission instruction](https://got-10k.github.io/submit_instructions).
 
 ### How to Loop Over GOT-10k Dataset?
 

@@ -43,7 +43,7 @@ class ExperimentGOT10k(object):
             print('\033[93m[WARNING]:\n'
                   'The groundtruths of GOT-10k\'s test set is withholded.\n'
                   'You will have to submit your results to\n'
-                  '[http://aitestunion.com/got-10k]'
+                  '[https://got-10k.github.io]'
                   '\nto access the performance.\033[0m')
             time.sleep(2)
 
@@ -100,7 +100,7 @@ class ExperimentGOT10k(object):
 
             # print submission guides
             print('\033[93mLogin and follow instructions on')
-            print('http://aitestunion.com/got-10k/submission_instructions')
+            print('https://got-10k.github.io/submission_instructions')
             print('to upload and evaluate your tracking results\033[0m')
 
             # switch back to previous working directory
