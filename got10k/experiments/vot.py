@@ -60,7 +60,8 @@ class ExperimentVOT(object):
                      'size_change', 'motion_change', 'empty']
 
     def run(self, tracker, visualize=False):
-        print('Running tracker %s on VOT...' % tracker.name)
+        print('Running tracker %s on %s...' % (
+            tracker.name, type(self.dataset).__name__))
 
         # run all specified experiments
         if 'supervised' in self.experiments:

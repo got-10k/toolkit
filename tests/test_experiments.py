@@ -5,7 +5,7 @@ import os
 
 from got10k.trackers import IdentityTracker
 from got10k.experiments import ExperimentGOT10k, ExperimentOTB, \
-    ExperimentVOT
+    ExperimentVOT, ExperimentDTB70, ExperimentTColor128
 
 
 class TestExperiments(unittest.TestCase):
@@ -37,6 +37,22 @@ class TestExperiments(unittest.TestCase):
         root_dir = os.path.join(self.data_dir, 'vot2018')
         # run experiment
         experiment = ExperimentVOT(root_dir)
+        experiment.run(self.tracker, visualize=False)
+        # report performance
+        experiment.report([self.tracker.name])
+
+    def test_dtb70(self):
+        root_dir = os.path.join(self.data_dir, 'DTB70')
+        # run experiment
+        experiment = ExperimentDTB70(root_dir)
+        experiment.run(self.tracker, visualize=False)
+        # report performance
+        experiment.report([self.tracker.name])
+
+    def test_tcolor128(self):
+        root_dir = os.path.join(self.data_dir, 'Temple-color-128')
+        # run experiment
+        experiment = ExperimentTColor128(root_dir)
         experiment.run(self.tracker, visualize=False)
         # report performance
         experiment.report([self.tracker.name])

@@ -4,7 +4,7 @@ import unittest
 import os
 import random
 
-from got10k.datasets import GOT10k, OTB, VOT, ImageNetVID
+from got10k.datasets import GOT10k, OTB, VOT, DTB70, TColor128, ImageNetVID
 
 
 class TestDatasets(unittest.TestCase):
@@ -36,6 +36,16 @@ class TestDatasets(unittest.TestCase):
         self._check_dataset(dataset)
         # with meta
         dataset = VOT(root_dir, anno_type='rect', return_meta=True)
+        self._check_dataset(dataset)
+
+    def test_dtb70(self):
+        root_dir = os.path.join(self.data_dir, 'DTB70')
+        dataset = DTB70(root_dir)
+        self._check_dataset(dataset)
+    
+    def test_tcolor128(self):
+        root_dir = os.path.join(self.data_dir, 'Temple-color-128')
+        dataset = TColor128(root_dir)
         self._check_dataset(dataset)
 
     def test_vid(self):

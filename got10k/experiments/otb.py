@@ -35,7 +35,8 @@ class ExperimentOTB(object):
         self.nbins_ce = 51
 
     def run(self, tracker, visualize=False):
-        print('Running tracker %s on OTB...' % tracker.name)
+        print('Running tracker %s on %s...' % (
+            tracker.name, type(self.dataset).__name__))
 
         # loop over the complete dataset
         for s, (img_files, anno) in enumerate(self.dataset):
