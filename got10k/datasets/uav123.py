@@ -92,8 +92,8 @@ class UAV123(object):
                     root_dir, 'data_seq/UAV123/%s' % \
                         seq_metas[version][seq_name]['folder_name'])
                 if not os.path.isdir(seq_dir):
-                    print('Warning: sequence %s not exist.' % seq_name)
+                    print('Warning: sequence %s not exists.' % seq_name)
         else:
-            # dataset not exist
+            # dataset not exists
             raise Exception('Dataset not found or corrupted. ' +
                             'You can use download=True to download it.')

@@ -1,4 +1,4 @@
-from __future__ import absolute_import, print_function
+from __future__ import absolute_import, print_function, division
 
 import os
 import glob
@@ -6,26 +6,33 @@ import numpy as np
 import six
 
 
-class DTB70(object):
-    """`DTB70 <https://github.com/flyers/drone-tracking>`_ Dataset.
+class NfS(object):
+    """`NfS <http://ci2cv.net/nfs/index.html>`_ Dataset.
 
     Publication:
-        ``Visual object tracking for unmanned aerial vehicles: A benchmark and new motion models``,
-        Y. Wu, J. Lim and M.-H. Yang, IEEE TPAMI 2015.
+        ``Need for Speed: A Benchmark for Higher Frame Rate Object Tracking``,
+        H. K. Galoogahi, A. Fagg, C. Huang, D. Ramanan and S. Lucey, ICCV 2017.
     
     Args:
         root_dir (string): Root directory of dataset where sequence
             folders exist.
+        fps (integer): Sequence frame rate. Two options ``30`` and ``240``
+            are available. Default is 240.
     """
-    def __init__(self, root_dir):
-        super(DTB70, self).__init__()
+    def __init__(self, root_dir, fps=240):
+        super(NfS, self).__init__()
+        assert fps in [30, 240]
+        self.fps = fps
         self.root_dir = root_dir
         self._check_integrity(root_dir)
 
         self.anno_files = sorted(glob.glob(
-            os.path.join(root_dir, '*/groundtruth_rect.txt')))
-        self.seq_dirs = [os.path.dirname(f) for f in self.anno_files]
-        self.seq_names = [os.path.basename(d) for d in self.seq_dirs]
+            os.path.join(root_dir, '*/%d/*.txt' % fps)))
+        self.seq_names = [
+            os.path.basename(f)[:-4] for f in self.anno_files]
+        self.seq_dirs = [os.path.join(
+            os.path.dirname(f), n)
+            for f, n in zip(self.anno_files, self.seq_names)]
     
     def __getitem__(self, index):
         r"""        
@@ -42,10 +49,20 @@ class DTB70(object):
             index = self.seq_names.index(index)
 
         img_files = sorted(glob.glob(
-            os.path.join(self.seq_dirs[index], 'img/*.jpg')))
-        anno = np.loadtxt(self.anno_files[index], delimiter=',')
+            os.path.join(self.seq_dirs[index], '*.jpg')))
+        anno = np.loadtxt(self.anno_files[index], dtype=str)
+        anno = anno[:, 1:5].astype(float)
+
+        # handle inconsistent lengths
+        if not len(img_files) == len(anno):
+            if abs(len(anno) / len(img_files) - 8) < 1:
+                anno = anno[0::8, :]
+            diff = abs(len(img_files) - len(anno))
+            if diff > 0 and diff <= 1:
+                n = min(len(img_files), len(anno))
+                anno = anno[:n]
+                img_files = img_files[:n]
         assert len(img_files) == len(anno)
-        assert anno.shape[1] == 4
 
         return img_files, anno
 

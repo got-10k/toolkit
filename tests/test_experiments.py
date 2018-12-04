@@ -5,7 +5,8 @@ import os
 
 from got10k.trackers import IdentityTracker
 from got10k.experiments import ExperimentGOT10k, ExperimentOTB, \
-    ExperimentVOT, ExperimentDTB70, ExperimentTColor128, ExperimentUAV123
+    ExperimentVOT, ExperimentDTB70, ExperimentTColor128, \
+    ExperimentUAV123, ExperimentNfS
 
 
 class TestExperiments(unittest.TestCase):
@@ -54,6 +55,15 @@ class TestExperiments(unittest.TestCase):
         for version in ['UAV123', 'UAV20L']:
             # run experiment
             experiment = ExperimentUAV123(root_dir, version)
+            experiment.run(self.tracker, visualize=False)
+            # report performance
+            experiment.report([self.tracker.name])
+
+    def test_nfs(self):
+        root_dir = os.path.join(self.data_dir, 'nfs')
+        for fps in [30, 240]:
+            # run experiment
+            experiment = ExperimentNfS(root_dir, fps)
             experiment.run(self.tracker, visualize=False)
             # report performance
             experiment.report([self.tracker.name])

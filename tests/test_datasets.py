@@ -5,7 +5,7 @@ import os
 import random
 
 from got10k.datasets import GOT10k, OTB, VOT, DTB70, TColor128, \
-    UAV123, ImageNetVID
+    UAV123, NfS, ImageNetVID
 
 
 class TestDatasets(unittest.TestCase):
@@ -52,7 +52,13 @@ class TestDatasets(unittest.TestCase):
     def test_uav123(self):
         root_dir = os.path.join(self.data_dir, 'UAV123')
         for version in ['UAV123', 'UAV20L']:
-            dataset = UAV123(root_dir, version='UAV123')
+            dataset = UAV123(root_dir, version)
+            self._check_dataset(dataset)
+
+    def test_nfs(self):
+        root_dir = os.path.join(self.data_dir, 'nfs')
+        for fps in [30, 240]:
+            dataset = NfS(root_dir, fps)
             self._check_dataset(dataset)
 
     def test_vid(self):

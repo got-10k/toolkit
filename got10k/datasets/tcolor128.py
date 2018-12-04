@@ -91,8 +91,8 @@ class TColor128(object):
             for seq_name in seq_names:
                 seq_dir = os.path.join(root_dir, seq_name)
                 if not os.path.isdir(seq_dir):
-                    print('Warning: sequence %s not exist.' % seq_name)
+                    print('Warning: sequence %s not exists.' % seq_name)
         else:
-            # dataset not exist
+            # dataset not exists
             raise Exception('Dataset not found or corrupted. ' +
                             'You can use download=True to download it.')
