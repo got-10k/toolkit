@@ -86,8 +86,7 @@ class ExperimentOTB(object):
                 boxes[0] = anno[0]
                 assert len(boxes) == len(anno)
 
-                ious = rect_iou(boxes, anno)
-                center_errors = center_error(boxes, anno)
+                ious, center_errors = self._calc_metrics(boxes, anno)
                 succ_curve[s], prec_curve[s] = self._calc_curves(ious, center_errors)
 
                 # calculate average tracking speed
@@ -185,6 +184,12 @@ class ExperimentOTB(object):
         time_file = os.path.join(time_dir, os.path.basename(
             record_file).replace('.txt', '_time.txt'))
         np.savetxt(time_file, times, fmt='%.8f')
+
+    def _calc_metrics(self, boxes, anno):
+        # can be modified by children classes
+        ious = rect_iou(boxes, anno)
+        center_errors = center_error(boxes, anno)
+        return ious, center_errors
 
     def _calc_curves(self, ious, center_errors):
         ious = np.asarray(ious, float)[:, np.newaxis]

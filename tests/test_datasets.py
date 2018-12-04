@@ -4,7 +4,8 @@ import unittest
 import os
 import random
 
-from got10k.datasets import GOT10k, OTB, VOT, DTB70, TColor128, ImageNetVID
+from got10k.datasets import GOT10k, OTB, VOT, DTB70, TColor128, \
+    UAV123, ImageNetVID
 
 
 class TestDatasets(unittest.TestCase):
@@ -47,6 +48,12 @@ class TestDatasets(unittest.TestCase):
         root_dir = os.path.join(self.data_dir, 'Temple-color-128')
         dataset = TColor128(root_dir)
         self._check_dataset(dataset)
+
+    def test_uav123(self):
+        root_dir = os.path.join(self.data_dir, 'UAV123')
+        for version in ['UAV123', 'UAV20L']:
+            dataset = UAV123(root_dir, version='UAV123')
+            self._check_dataset(dataset)
 
     def test_vid(self):
         root_dir = os.path.join(self.data_dir, 'ILSVRC')

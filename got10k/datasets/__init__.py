@@ -5,4 +5,5 @@ from .otb import OTB
 from .vot import VOT
 from .dtb70 import DTB70
 from .tcolor128 import TColor128
+from .uav123 import UAV123
 from .vid import ImageNetVID
