@@ -31,9 +31,9 @@ class TColor128(object):
         self.seq_dirs = [os.path.dirname(f) for f in self.anno_files]
         self.seq_names = [os.path.basename(d) for d in self.seq_dirs]
         # valid frame range for each sequence
-        self.range_files = [os.path.join(
-            root_dir, '%s/%s_frames.txt' % (n, n))
-            for n in self.seq_names]
+        self.range_files = [glob.glob(
+            os.path.join(d, '*_frames.txt'))[0]
+            for d in self.seq_dirs]
     
     def __getitem__(self, index):
         r"""        
