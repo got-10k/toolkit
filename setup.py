@@ -11,6 +11,7 @@ setup(name='got10k',
       install_requires=[
           'numpy', 'matplotlib', 'Pillow', 'Shapely', 'fire'],
       packages=find_packages(),
+      include_package_data=True,
       keywords=[
           'GOT-10k',
           'Generic Object Tracking',

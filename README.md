@@ -30,7 +30,7 @@ arXiv:1810.11981, 2018.
 Install the toolkit using `pip` (recommended):
 
 ```bash
-pip install git+https://github.com/got-10k/toolkit.git@master
+pip install --upgrade git+https://github.com/got-10k/toolkit.git@master
 ```
 
 Or, alternatively, clone the repository and install dependencies:
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     experiment.report([tracker.name])
 ```
 
-To run experiments on [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html) or [VOT](http://votchallenge.net) benchmarks, simply change `ExperimentGOT10k` to `ExperimentOTB` or `ExperimentVOT`, and `root_dir` to their corresponding paths for this purpose.
+To run experiments on [OTB](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html), [VOT](http://votchallenge.net) or other benchmarks, simply change `ExperimentGOT10k`, e.g., to `ExperimentOTB` or `ExperimentVOT`, and `root_dir` to their corresponding paths for this purpose.
 
 ### Quick Start: Jupyter Notebook for Off-the-Shelf Usage
 
