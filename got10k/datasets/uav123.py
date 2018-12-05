@@ -95,5 +95,4 @@ class UAV123(object):
                     print('Warning: sequence %s not exists.' % seq_name)
         else:
             # dataset not exists
-            raise Exception('Dataset not found or corrupted. ' +
-                            'You can use download=True to download it.')
+            raise Exception('Dataset not found or corrupted.')
