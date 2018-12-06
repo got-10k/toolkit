@@ -28,6 +28,8 @@ class ExperimentVOT(object):
             folders exist.
         version (integer, optional): Specify the VOT dataset version. Specify as
             one of 2013~2018. Default is 2017.
+        read_image (boolean, optional): If True, return the read PIL image in
+            each frame. Otherwise only return the image path. Default is True.
         experiments (string or tuple): Specify the type(s) of experiments to run.
             Default is a tuple (``supervised``, ``unsupervised``, ``realtime``).
         result_dir (string, optional): Directory for storing tracking
@@ -35,7 +37,7 @@ class ExperimentVOT(object):
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
-    def __init__(self, root_dir, version=2017,
+    def __init__(self, root_dir, version=2017, read_image=True,
                  experiments=('supervised', 'unsupervised', 'realtime'),
                  result_dir='results', report_dir='reports'):
         super(ExperimentVOT, self).__init__()
@@ -49,6 +51,7 @@ class ExperimentVOT(object):
         self.experiments = experiments
         if version == 'LT2018':
             version = '-' + version
+        self.read_image = read_image
         self.result_dir = os.path.join(result_dir, 'VOT' + str(version))
         self.report_dir = os.path.join(report_dir, 'VOT' + str(version))
         self.skip_initialize = 5
@@ -112,24 +115,28 @@ class ExperimentVOT(object):
                 # tracking loop
                 for f, img_file in enumerate(img_files):
                     image = Image.open(img_file)
+                    if self.read_image:
+                        frame = image
+                    else:
+                        frame = img_file
 
                     start_time = time.time()
                     if f == 0:
                         # initial frame
-                        tracker.init(image, anno_rects[0])
+                        tracker.init(frame, anno_rects[0])
                         boxes.append([1])
                     elif failure:
                         # during failure frames
                         if f == next_start:
                             failure = False
-                            tracker.init(image, anno_rects[f])
+                            tracker.init(frame, anno_rects[f])
                             boxes.append([1])
                         else:
                             start_time = np.NaN
                             boxes.append([0])
                     else:
                         # during success frames
-                        box = tracker.update(image)
+                        box = tracker.update(frame)
                         iou = poly_iou(anno[f], box, bound=image.size)
                         if iou <= 0.0:
                             # tracking failure
@@ -220,11 +227,15 @@ class ExperimentVOT(object):
             # tracking loop
             for f, img_file in enumerate(img_files):
                 image = Image.open(img_file)
+                if self.read_image:
+                    frame = image
+                else:
+                    frame = img_file
 
                 start_time = time.time()
                 if f == next_start:
                     # during initial frames
-                    tracker.init(image, anno_rects[f])
+                    tracker.init(frame, anno_rects[f])
                     boxes.append([1])
 
                     # reset state variables
@@ -247,7 +258,7 @@ class ExperimentVOT(object):
                     if f < current:
                         box = boxes[-1]
                     elif f == current:
-                        box = tracker.update(image)
+                        box = tracker.update(frame)
 
                     iou = poly_iou(anno[f], box, bound=image.size)
                     if iou <= 0.0:
@@ -267,7 +278,7 @@ class ExperimentVOT(object):
                         start_time = np.NaN
                     elif f == current:
                         # current frame
-                        box = tracker.update(image)
+                        box = tracker.update(frame)
                         iou = poly_iou(anno[f], box, bound=image.size)
                         if iou <= 0.0:
                             # tracking failure
