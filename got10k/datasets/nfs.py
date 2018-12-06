@@ -51,7 +51,8 @@ class NfS(object):
         img_files = sorted(glob.glob(
             os.path.join(self.seq_dirs[index], '*.jpg')))
         anno = np.loadtxt(self.anno_files[index], dtype=str)
-        anno = anno[:, 1:5].astype(float)
+        anno = anno[:, 1:5].astype(float)  # [left, top, right, bottom]
+        anno[:, 2:] -= anno[:, :2]         # [left, top, width, height]
 
         # handle inconsistent lengths
         if not len(img_files) == len(anno):
