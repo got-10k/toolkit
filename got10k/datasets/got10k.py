@@ -59,8 +59,8 @@ class GOT10k(object):
             self.seq_dirs[index], '*.jpg')))
         anno = np.loadtxt(self.anno_files[index], delimiter=',')
 
-        if self.subset == 'test':
-            assert anno.ndim == 1
+        if self.subset == 'test' and anno.ndim == 1:
+            assert len(anno) == 4
             anno = anno[np.newaxis, :]
         else:
             assert len(img_files) == len(anno)

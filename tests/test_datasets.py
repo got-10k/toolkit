@@ -19,11 +19,13 @@ class TestDatasets(unittest.TestCase):
     def test_got10k(self):
         root_dir = os.path.join(self.data_dir, 'GOT-10k')
         # without meta
-        dataset = GOT10k(root_dir, subset='train')
-        self._check_dataset(dataset)
+        for subset in ['train', 'val', 'test']:
+            dataset = GOT10k(root_dir, subset=subset)
+            self._check_dataset(dataset)
         # with meta
-        dataset = GOT10k(root_dir, subset='val', return_meta=True)
-        self._check_dataset(dataset)
+        for subset in ['train', 'val', 'test']:
+            dataset = GOT10k(root_dir, subset=subset, return_meta=True)
+            self._check_dataset(dataset)
 
     def test_otb(self):
         root_dir = os.path.join(self.data_dir, 'OTB')
