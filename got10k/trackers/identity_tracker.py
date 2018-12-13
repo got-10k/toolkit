@@ -1,9 +1,9 @@
 from __future__ import absolute_import
 
-from . import BaseTracker
+from . import Tracker
 
 
-class IdentityTracker(BaseTracker):
+class IdentityTracker(Tracker):
 
     def __init__(self):
         super(IdentityTracker, self).__init__(

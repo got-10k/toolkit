@@ -7,7 +7,7 @@ from PIL import Image
 from ..utils.viz import show_frame
 
 
-class BaseTracker(object):
+class Tracker(object):
 
     def __init__(self, name, is_deterministic=False):
         self.name = name

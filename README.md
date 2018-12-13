@@ -48,10 +48,10 @@ Then directly copy `got10k` folder to your workspace to use it.
 Here is a simple example on how to use the toolkit to define a tracker, run experiments on GOT-10k and evaluate performance.
 
 ```Python
-from got10k.trackers import BaseTracker
+from got10k.trackers import Tracker
 from got10k.experiments import ExperimentGOT10k
 
-class IdentityTracker(BaseTracker):
+class IdentityTracker(Tracker):
     def __init__(self):
         super(IdentityTracker, self).__init__(name='IdentityTracker')
     
@@ -81,12 +81,12 @@ Open [quick_examples.ipynb](https://github.com/got-10k/toolkit/tree/master/examp
 
 ### How to Define a Tracker?
 
-To define a tracker using the toolkit, simply inherit and override `init` and `update` methods from the `BaseTracker` class. Here is a simple example:
+To define a tracker using the toolkit, simply inherit and override `init` and `update` methods from the `Tracker` class. Here is a simple example:
 
 ```Python
-from got10k.trackers import BaseTracker
+from got10k.trackers import Tracker
 
-class IdentityTracker(BaseTracker):
+class IdentityTracker(Tracker):
     def __init__(self):
         super(IdentityTracker, self).__init__(
             name='IdentityTracker',  # tracker name

@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function
 import fire
 from PIL import Image
 
-from got10k.trackers import BaseTracker, IdentityTracker
+from got10k.trackers import Tracker, IdentityTracker
 from got10k.experiments import ExperimentGOT10k
 from got10k.datasets import GOT10k
 from got10k.utils.viz import show_frame

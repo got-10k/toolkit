@@ -6,6 +6,7 @@ data/
 cache/
 results/
 reports/
+profiles/
 venv/
 build/
 dist/
