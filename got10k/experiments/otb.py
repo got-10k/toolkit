@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import json
 from PIL import Image
 
@@ -69,6 +70,7 @@ class ExperimentOTB(object):
 
         performance = {}
         for name in tracker_names:
+            print('Evaluating', name)
             seq_num = len(self.dataset)
             succ_curve = np.zeros((seq_num, self.nbins_iou))
             prec_curve = np.zeros((seq_num, self.nbins_ce))
@@ -130,7 +132,7 @@ class ExperimentOTB(object):
         with open(report_file, 'w') as f:
             json.dump(performance, f, indent=4)
         # plot precision and success curves
-        self._plot_curves(performance, report_dir)
+        self.plot_curves(tracker_names)
 
         return performance
 
@@ -206,41 +208,92 @@ class ExperimentOTB(object):
 
         return succ_curve, prec_curve
 
-    def _plot_curves(self, performance, report_dir):
-        if not os.path.isdir(report_dir):
-            os.makedirs(report_dir)
+    def plot_curves(self, tracker_names):
+        # assume tracker_names[0] is your tracker
+        report_dir = os.path.join(self.report_dir, tracker_names[0])
+        assert os.path.exists(report_dir), \
+            'No reports found. Run "report" first'
+            'before plotting curves.'
+        report_file = os.path.join(report_dir, 'performance.json')
+        assert os.path.exists(report_file), \
+            'No reports found. Run "report" first'
+            'before plotting curves.'
+
+        # load pre-computed performance
+        with open(report_file) as f:
+            performance = json.load(f)
+
         succ_file = os.path.join(report_dir, 'success_plots.png')
         prec_file = os.path.join(report_dir, 'precision_plots.png')
         key = 'overall'
+
+        # markers
+        markers = ['-', '--', '-.']
+        markers = [c + m for m in markers for c in [''] * 10]
+
+        # sort trackers by success score
+        tracker_names = list(performance.keys())
+        succ = [t[key]['success_score'] for t in performance.values()]
+        inds = np.argsort(succ)[::-1]
+        tracker_names = [tracker_names[i] for i in inds]
 
         # plot success curves
         thr_iou = np.linspace(0, 1, self.nbins_iou)
         fig, ax = plt.subplots()
         lines = []
         legends = []
-        for name, perf in performance.items():
-            line, = ax.plot(thr_iou, perf[key]['success_curve'])
+        for i, name in enumerate(tracker_names):
+            line, = ax.plot(thr_iou,
+                            performance[name][key]['success_curve'],
+                            markers[i % len(markers)])
             lines.append(line)
-            legends.append('%s: [%.3f]' % (name, perf[key]['success_score']))
-        ax.legend(lines, legends, loc=1)
-        ax.set(xlabel='Overlap threshold', ylabel='Success rate',
-               xlim=(0, 1), ylim=(0, None), title='Success plots of OPE')
+            legends.append('%s: [%.3f]' % (name, performance[name][key]['success_score']))
+        matplotlib.rcParams.update({'font.size': 7.4})
+        legend = ax.legend(lines, legends, loc='center left',
+                           bbox_to_anchor=(1, 0.5))
+
+        matplotlib.rcParams.update({'font.size': 9})
+        ax.set(xlabel='Overlap threshold',
+               ylabel='Success rate',
+               xlim=(0, 1), ylim=(0, 1),
+               title='Success plots of OPE')
+        ax.grid(True)
+        fig.tight_layout()
         
         print('Saving success plots to', succ_file)
-        fig.savefig(succ_file, dpi=300)
+        fig.savefig(succ_file,
+                    bbox_extra_artists=(legend,),
+                    bbox_inches='tight',
+                    dpi=300)
+
+        # sort trackers by precision score
+        tracker_names = list(performance.keys())
+        prec = [t[key]['precision_score'] for t in performance.values()]
+        inds = np.argsort(prec)[::-1]
+        tracker_names = [tracker_names[i] for i in inds]
 
         # plot precision curves
         thr_ce = np.arange(0, self.nbins_ce)
         fig, ax = plt.subplots()
         lines = []
         legends = []
-        for name, perf in performance.items():
-            line, = ax.plot(thr_ce, perf[key]['precision_curve'])
+        for i, name in enumerate(tracker_names):
+            line, = ax.plot(thr_ce,
+                            performance[name][key]['precision_curve'],
+                            markers[i % len(markers)])
             lines.append(line)
-            legends.append('%s: [%.3f]' % (name, perf[key]['precision_score']))
-        ax.legend(lines, legends, loc=2)
-        ax.set(xlabel='Location error threshold', ylabel='Precision',
-               xlim=(0, 50), ylim=(0, None), title='Precision plots of OPE')
+            legends.append('%s: [%.3f]' % (name, performance[name][key]['precision_score']))
+        matplotlib.rcParams.update({'font.size': 7.4})
+        legend = ax.legend(lines, legends, loc='center left',
+                           bbox_to_anchor=(1, 0.5))
+        
+        matplotlib.rcParams.update({'font.size': 9})
+        ax.set(xlabel='Location error threshold',
+               ylabel='Precision',
+               xlim=(0, thr_ce.max()), ylim=(0, 1),
+               title='Precision plots of OPE')
+        ax.grid(True)
+        fig.tight_layout()
         
         print('Saving precision plots to', prec_file)
         fig.savefig(prec_file, dpi=300)

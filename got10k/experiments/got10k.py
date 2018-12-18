@@ -43,7 +43,7 @@ class ExperimentGOT10k(object):
             print('\033[93m[WARNING]:\n'
                   'The groundtruths of GOT-10k\'s test set is withholded.\n'
                   'You will have to submit your results to\n'
-                  '[https://got-10k.github.io]'
+                  '[http://47.94.140.97/]'
                   '\nto access the performance.\033[0m')
             time.sleep(2)
 
@@ -100,7 +100,7 @@ class ExperimentGOT10k(object):
 
             # print submission guides
             print('\033[93mLogin and follow instructions on')
-            print('https://got-10k.github.io/submission_instructions')
+            print('http://47.94.140.97/submit_instructions')
             print('to upload and evaluate your tracking results\033[0m')
 
             # switch back to previous working directory
@@ -185,7 +185,7 @@ class ExperimentGOT10k(object):
             with open(report_file, 'w') as f:
                 json.dump(performance, f, indent=4)
             # plot success curves
-            self._plot_curves(performance, report_dir)
+            self.plot_curves(tracker_names)
 
             return performance
 
@@ -277,9 +277,21 @@ class ExperimentGOT10k(object):
 
         return ao, sr, speed_fps, succ_curve
 
-    def _plot_curves(self, performance, report_dir):
-        if not os.path.exists(report_dir):
-            os.makedirs(report_dir)
+    def plot_curves(self, tracker_names):
+        # assume tracker_names[0] is your tracker
+        report_dir = os.path.join(self.report_dir, tracker_names[0])
+        assert os.path.exists(report_dir), \
+            'No reports found. Run "report" first'
+            'before plotting curves.'
+        report_file = os.path.join(report_dir, 'performance.json')
+        assert os.path.exists(report_file), \
+            'No reports found. Run "report" first'
+            'before plotting curves.'
+
+        # load pre-computed performance
+        with open(report_file) as f:
+            performance = json.load(f)
+
         succ_file = os.path.join(report_dir, 'success_plot.png')
         key = 'overall'
 
