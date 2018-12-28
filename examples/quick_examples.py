@@ -42,7 +42,7 @@ def example_track_test_set():
 
     # a ".zip" file will be generated ready for submission
     # follow the guide to submit your results to
-    # http://47.94.140.97/
+    # http://got-10k.aitestunion.com/
     experiment.report([tracker.name])
 
 

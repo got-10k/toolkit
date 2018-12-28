@@ -1,10 +1,10 @@
 # GOT-10k Python Toolkit
 
-This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://47.94.140.97/) benchmark. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
+This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://got-10k.aitestunion.com/) benchmark. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
 For convenience, the toolkit also provides unofficial implementation of dataset interfaces and tracking pipelines for [OTB (2013/2015)](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html), [VOT (2013~2018)](http://votchallenge.net), [DTB70](https://github.com/flyers/drone-tracking), [TColor128](http://www.dabi.temple.edu/~hbling/data/TColor-128/TColor-128.html), [NfS](http://ci2cv.net/nfs/index.html) and [UAV123](https://ivul.kaust.edu.sa/Pages/pub-benchmark-simulator-uav.aspx) benchmarks.
 
-[GOT-10k](http://47.94.140.97/) is a large, high-diversity and one-shot database for training and evaluating generic purposed visual trackers. If you use the GOT-10k database or toolkits for a research publication, please consider citing:
+[GOT-10k](http://got-10k.aitestunion.com/) is a large, high-diversity and one-shot database for training and evaluating generic purposed visual trackers. If you use the GOT-10k database or toolkits for a research publication, please consider citing:
 
 ```Bibtex
 "GOT-10k: A Large High-Diversity Benchmark for Generic Object Tracking in the Wild."
@@ -12,7 +12,7 @@ L. Huang, X. Zhao and K. Huang,
 arXiv:1810.11981, 2018.
 ```
 
-&emsp;\[[Project](http://47.94.140.97/)\]\[[PDF](https://arxiv.org/abs/1810.11981)\]\[[Bibtex](http://47.94.140.97/bibtex)\]
+&emsp;\[[Project](http://got-10k.aitestunion.com/)\]\[[PDF](https://arxiv.org/abs/1810.11981)\]\[[Bibtex](http://got-10k.aitestunion.com/bibtex)\]
 
 ## Table of Contents
 
@@ -137,9 +137,9 @@ experiment.report([tracker.name])
 
 When evaluated on the __validation subset__, the scores and curves will be directly generated in `report_dir`.
 
-However, when evaluated on the __test subset__, since all groundtruths are withholded, you will have to submit your results to the [evaluation server](http://47.94.140.97/submit_instructions) for evaluation. The `report` function will generate a `.zip` file which can be directly uploaded for submission. For more instructions, see [submission instruction](http://47.94.140.97/submit_instructions).
+However, when evaluated on the __test subset__, since all groundtruths are withholded, you will have to submit your results to the [evaluation server](http://got-10k.aitestunion.com/submit_instructions) for evaluation. The `report` function will generate a `.zip` file which can be directly uploaded for submission. For more instructions, see [submission instruction](http://got-10k.aitestunion.com/submit_instructions).
 
-See public evaluation results on [GOT-10k's leaderboard](http://47.94.140.97/leaderboard).
+See public evaluation results on [GOT-10k's leaderboard](http://got-10k.aitestunion.com/leaderboard).
 
 ### How to Loop Over GOT-10k Dataset?
 

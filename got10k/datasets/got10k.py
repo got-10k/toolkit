@@ -7,7 +7,7 @@ import six
 
 
 class GOT10k(object):
-    r"""`GOT-10K <http://47.94.140.97//>`_ Dataset.
+    r"""`GOT-10K <http://got-10k.aitestunion.com//>`_ Dataset.
 
     Publication:
         ``GOT-10k: A Large High-Diversity Benchmark for Generic Object
