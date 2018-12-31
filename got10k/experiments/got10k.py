@@ -40,10 +40,10 @@ class ExperimentGOT10k(object):
 
     def run(self, tracker, visualize=False):
         if self.subset == 'test':
-            print('\033[93m[WARNING]:\n'
-                  'The groundtruths of GOT-10k\'s test set is withholded.\n'
-                  'You will have to submit your results to\n'
-                  '[http://got-10k.aitestunion.com/]'
+            print('\033[93m[WARNING]:\n' \
+                  'The groundtruths of GOT-10k\'s test set is withholded.\n' \
+                  'You will have to submit your results to\n' \
+                  '[http://got-10k.aitestunion.com/]' \
                   '\nto access the performance.\033[0m')
             time.sleep(2)
 
@@ -281,11 +281,11 @@ class ExperimentGOT10k(object):
         # assume tracker_names[0] is your tracker
         report_dir = os.path.join(self.report_dir, tracker_names[0])
         assert os.path.exists(report_dir), \
-            'No reports found. Run "report" first'
+            'No reports found. Run "report" first' \
             'before plotting curves.'
         report_file = os.path.join(report_dir, 'performance.json')
         assert os.path.exists(report_file), \
-            'No reports found. Run "report" first'
+            'No reports found. Run "report" first' \
             'before plotting curves.'
 
         # load pre-computed performance

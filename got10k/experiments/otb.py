@@ -212,11 +212,11 @@ class ExperimentOTB(object):
         # assume tracker_names[0] is your tracker
         report_dir = os.path.join(self.report_dir, tracker_names[0])
         assert os.path.exists(report_dir), \
-            'No reports found. Run "report" first'
+            'No reports found. Run "report" first' \
             'before plotting curves.'
         report_file = os.path.join(report_dir, 'performance.json')
         assert os.path.exists(report_file), \
-            'No reports found. Run "report" first'
+            'No reports found. Run "report" first' \
             'before plotting curves.'
 
         # load pre-computed performance
