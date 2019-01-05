@@ -2,7 +2,7 @@
 
 > UPDATE:<br>
 > 1. The toolkit can be directly installed via `pip install got10k` !<br>
-> 2. Check our light-weighted repository [SiamFC](https://github.com/got-10k/siamfc) for a minimal example of training on GOT-10k/VID and evaluation on GOT-10k as well as 6 other tracking datasets!
+> 2. Check our light-weighted repository [SiamFC](https://github.com/got-10k/siamfc) for a minimal example of training and evaluation using GOT-10k toolkit!
 
 This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://got-10k.aitestunion.com/) benchmark. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
