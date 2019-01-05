@@ -1,5 +1,9 @@
 # GOT-10k Python Toolkit
 
+> UPDATE:<br>
+> 1. The toolkit can be directly installed via `pip install got10k` !<br>
+> 2. Check our light-weighted repository [SiamFC](https://github.com/got-10k/siamfc) for a minimal example of training on GOT-10k/VID and evaluation on GOT-10k as well as 6 other tracking datasets!
+
 This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://got-10k.aitestunion.com/) benchmark. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
 For convenience, the toolkit also provides unofficial implementation of dataset interfaces and tracking pipelines for [OTB (2013/2015)](http://cvlab.hanyang.ac.kr/tracker_benchmark/index.html), [VOT (2013~2018)](http://votchallenge.net), [DTB70](https://github.com/flyers/drone-tracking), [TColor128](http://www.dabi.temple.edu/~hbling/data/TColor-128/TColor-128.html), [NfS](http://ci2cv.net/nfs/index.html) and [UAV123](https://ivul.kaust.edu.sa/Pages/pub-benchmark-simulator-uav.aspx) benchmarks.
@@ -30,7 +34,7 @@ arXiv:1810.11981, 2018.
 Install the toolkit using `pip` (recommended):
 
 ```bash
-pip install --upgrade git+https://github.com/got-10k/toolkit.git@master
+pip install --upgrade got10k
 ```
 
 Or, alternatively, clone the repository and install dependencies:
