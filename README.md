@@ -26,6 +26,7 @@ arXiv:1810.11981, 2018.
 * [How to Define a Tracker?](#how-to-define-a-tracker)
 * [How to Run Experiments on GOT-10k?](#how-to-run-experiments-on-got-10k)
 * [How to Evaluate Performance?](#how-to-evaluate-performance)
+* [How to Plot Success Curves?](#how-to-plot-success-curves)
 * [How to Loop Over GOT-10k Dataset?](#how-to-loop-over-got-10k-dataset)
 * [Issues](#issues)
 
