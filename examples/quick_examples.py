@@ -46,6 +46,19 @@ def example_track_test_set():
     experiment.report([tracker.name])
 
 
+def example_plot_curves():
+    # reports of 25 baseline entries can be downloaded from
+    # http://got-10k.aitestunion.com/downloads
+    report_files = [
+        'reports/GOT-10k/performance_25_entries.json']
+    tracker_names = [
+        'SiamFCv2', 'GOTURN', 'CCOT', 'MDNet']
+    
+    # setup experiment and plot curves
+    experiment = ExperimentGOT10k('data/GOT-10k', subset='test')
+    experiment.plot_curves(report_files, tracker_names)
+
+
 def example_loop_dataset():
     # setup dataset
     dataset = GOT10k(ROOT_DIR, subset='val')

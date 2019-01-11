@@ -1,7 +1,7 @@
 # GOT-10k Python Toolkit
 
 > UPDATE:<br>
-> 1. The toolkit can be directly installed via `pip install got10k` !<br>
+> 1. The success curves can now be generated using `experiment.plot_curves`! Run `pip install --upgrade got10k` to access it.<br>
 > 2. Check our light-weighted repository [SiamFC](https://github.com/got-10k/siamfc) for a minimal example of training and evaluation using GOT-10k toolkit!
 
 This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://got-10k.aitestunion.com/) benchmark. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
@@ -144,6 +144,23 @@ When evaluated on the __validation subset__, the scores and curves will be direc
 However, when evaluated on the __test subset__, since all groundtruths are withholded, you will have to submit your results to the [evaluation server](http://got-10k.aitestunion.com/submit_instructions) for evaluation. The `report` function will generate a `.zip` file which can be directly uploaded for submission. For more instructions, see [submission instruction](http://got-10k.aitestunion.com/submit_instructions).
 
 See public evaluation results on [GOT-10k's leaderboard](http://got-10k.aitestunion.com/leaderboard).
+
+## How to Plot Success Curves?
+
+Assume that a list of all performance files (JSON files) are stored in `report_files`, here is an example showing how to plot success curves:
+
+```Python
+from got10k.experiments import ExperimentGOT10k
+
+report_files = ['reports/GOT-10k/performance_25_entries.json']
+tracker_names = ['SiamFCv2', 'GOTURN', 'CCOT', 'MDNet']
+
+# setup experiment and plot curves
+experiment = ExperimentGOT10k('data/GOT-10k', subset='test')
+experiment.plot_curves(report_files, tracker_names)
+```
+
+The report file of 25 baseline entries can be downloaded from the [Downloads page](http://got-10k.aitestunion.com/downloads). You can also download single report file for each entry from the [Leaderboard page](http://got-10k.aitestunion.com/leaderboard).
 
 ### How to Loop Over GOT-10k Dataset?
 

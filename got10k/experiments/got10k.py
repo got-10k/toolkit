@@ -185,7 +185,7 @@ class ExperimentGOT10k(object):
             with open(report_file, 'w') as f:
                 json.dump(performance, f, indent=4)
             # plot success curves
-            self.plot_curves(tracker_names)
+            self.plot_curves([report_file], tracker_names)
 
             return performance
 
@@ -277,20 +277,20 @@ class ExperimentGOT10k(object):
 
         return ao, sr, speed_fps, succ_curve
 
-    def plot_curves(self, tracker_names):
+    def plot_curves(self, report_files, tracker_names):
+        assert isinstance(report_files, list), \
+            'Expected "report_files" to be a list, ' \
+            'but got %s instead' % type(report_files)
+        
         # assume tracker_names[0] is your tracker
         report_dir = os.path.join(self.report_dir, tracker_names[0])
-        assert os.path.exists(report_dir), \
-            'No reports found. Run "report" first' \
-            'before plotting curves.'
-        report_file = os.path.join(report_dir, 'performance.json')
-        assert os.path.exists(report_file), \
-            'No reports found. Run "report" first' \
-            'before plotting curves.'
-
-        # load pre-computed performance
-        with open(report_file) as f:
-            performance = json.load(f)
+        if not os.path.exists(report_dir):
+            os.makedirs(report_dir)
+        
+        performance = {}
+        for report_file in report_files:
+            with open(report_file) as f:
+                performance.update(json.load(f))
 
         succ_file = os.path.join(report_dir, 'success_plot.png')
         key = 'overall'
