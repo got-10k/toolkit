@@ -28,7 +28,7 @@ class Tracker(object):
         for f, img_file in enumerate(img_files):
             image = Image.open(img_file)
             if not image.mode == 'RGB':
-                image.convert('RGB')
+                image = image.convert('RGB')
 
             start_time = time.time()
             if f == 0:

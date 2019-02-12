@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='got10k',
-      version='0.1.1',
+      version='0.1.2',
       description='GOT-10k benchmark official API',
       author='Lianghua Huang',
       author_email='lianghua.huang.cs@gmail.com',
