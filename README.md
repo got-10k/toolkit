@@ -5,7 +5,7 @@
 
 _Run experimenets over common tracking benchmarks (code from [siamfc](https://github.com/got-10k/siamfc/blob/master/test.py)):_
 
-<img src="resources/sample_batch_run.png" width = "600" alt="图片名称" align=center />
+<img src="resources/sample_batch_run.jpg" width = "600" alt="sample_batch_run" align=center />
 
 This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://got-10k.aitestunion.com/) benchmark. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
