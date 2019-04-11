@@ -5,13 +5,13 @@ import os
 import random
 
 from got10k.datasets import GOT10k, OTB, VOT, DTB70, TColor128, \
-    UAV123, NfS, ImageNetVID
+    UAV123, NfS, LaSOT, TrackingNet, ImageNetVID
 
 
 class TestDatasets(unittest.TestCase):
 
     def setUp(self):
-        self.data_dir = 'data'
+        self.data_dir = os.path.expanduser('~/data')
 
     def tearDown(self):
         pass
@@ -61,6 +61,18 @@ class TestDatasets(unittest.TestCase):
         root_dir = os.path.join(self.data_dir, 'nfs')
         for fps in [30, 240]:
             dataset = NfS(root_dir, fps)
+            self._check_dataset(dataset)
+
+    def test_lasot(self):
+        root_dir = os.path.join(self.data_dir, 'LaSOTBenchmark')
+        for subset in ['train', 'test']:
+            dataset = LaSOT(root_dir, subset)
+            self._check_dataset(dataset)
+
+    def test_trackingnet(self):
+        root_dir = os.path.join(self.data_dir, 'TrackingNet')
+        for subset in ['train', 'test']:
+            dataset = TrackingNet(root_dir, subset)
             self._check_dataset(dataset)
 
     def test_vid(self):

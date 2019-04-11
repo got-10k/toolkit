@@ -1,8 +1,11 @@
 # GOT-10k Python Toolkit
 
 > UPDATE:<br>
-> 1. The success curves can now be generated using `experiment.plot_curves`! Run `pip install --upgrade got10k` to access it.<br>
-> 2. Check our light-weighted repository [SiamFC](https://github.com/got-10k/siamfc) for a minimal example of training and evaluation using GOT-10k toolkit!
+> All common tracking datasets (OTB, VOT, UAV, TColor, DTB, NfS, LaSOT, TrackingNet and GOT-10k) are included.
+
+_Run experimenets over common tracking benchmarks (code from [siamfc](https://github.com/got-10k/siamfc/blob/master/test.py)):_
+
+<img src="resources/sample_batch_run.png" width = "600" alt="图片名称" align=center />
 
 This repository contains the official python toolkit for running experiments and evaluate performance on [GOT-10k](http://got-10k.aitestunion.com/) benchmark. The code is written in pure python and is compile-free. Although we support both python2 and python3, we recommend python3 for better performance.
 
