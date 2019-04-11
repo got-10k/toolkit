@@ -1,7 +1,7 @@
 # GOT-10k Python Toolkit
 
 > UPDATE:<br>
-> All common tracking datasets (OTB, VOT, UAV, TColor, DTB, NfS, LaSOT, TrackingNet and GOT-10k) are included.
+> All common tracking datasets (OTB, VOT, UAV, TColor, DTB, NfS, LaSOT, TrackingNet and GOT-10k) are supported.
 
 _Run experimenets over common tracking benchmarks (code from [siamfc](https://github.com/got-10k/siamfc/blob/master/test.py)):_
 
