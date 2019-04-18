@@ -1,15 +1,9 @@
 from __future__ import absolute_import, division
 
-import time
-import sys
+import wget
 import os
 import shutil
 import zipfile
-import sys
-if sys.version_info[0] == 3:
-    from urllib.request import urlretrieve
-else:
-    from urllib import urlretrieve
 
 
 def download(url, filename):
@@ -19,21 +13,7 @@ def download(url, filename):
         url (string): URL of the internet file.
         filename (string): Path to store the downloaded file.
     """
-    return urlretrieve(url, filename, _reporthook)
-
-
-def _reporthook(count, block_size, total_size):
-    global start_time
-    if count == 0:
-        start_time = time.time()
-        return
-    duration = time.time() - start_time
-    progress_size = int(count * block_size)
-    speed = int(progress_size / (1024 * duration))
-    percent = int(count * block_size * 100 / total_size)
-    sys.stdout.write("\r...%d%%, %d MB, %d KB/s, %d seconds passed" %
-                     (percent, progress_size / (1024 * 1024), speed, duration))
-    sys.stdout.flush()
+    return wget.download(url, out=filename)
 
 
 def extract(filename, extract_dir):
