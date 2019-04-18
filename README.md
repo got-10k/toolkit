@@ -38,7 +38,7 @@ arXiv:1810.11981, 2018.
 Install the toolkit using `pip` (recommended):
 
 ```bash
-pip install --upgrade got10k
+pip install --upgrade git+https://github.com/got-10k/toolkit.git@develop
 ```
 
 Or, alternatively, clone the repository and install dependencies:
