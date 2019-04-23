@@ -1,9 +1,9 @@
 # GOT-10k Python Toolkit
 
 > UPDATE:<br>
-> All common tracking datasets (GOT-10k, OTB, VOT, UAV, TColor, DTB, NfS, LaSOT, TrackingNet and ILSVRC-VID) are supported.<br>
-> Add support for downloading VOT2019 (ST/LT/RGBD/RGBT) datasets.<br>
-> Fix the randomness in ILSVRC-VID ([issue #13](https://github.com/got-10k/toolkit/issues/13)).
+> All common tracking datasets (GOT-10k, OTB, VOT, UAV, TColor, DTB, NfS, LaSOT and TrackingNet) are supported.<br>
+> Support VOT2019 (ST/LT/RGBD/RGBT) downloading.<br>
+> Fix the randomness in ImageNet-VID ([issue #13](https://github.com/got-10k/toolkit/issues/13)).
 
 _Run experimenets over common tracking benchmarks (code from [siamfc](https://github.com/got-10k/siamfc/blob/master/test.py)):_
 
