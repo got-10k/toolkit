@@ -1,7 +1,9 @@
 # GOT-10k Python Toolkit
 
 > UPDATE:<br>
-> All common tracking datasets (OTB, VOT, UAV, TColor, DTB, NfS, LaSOT, TrackingNet and GOT-10k) are supported.
+> All common tracking datasets (GOT-10k, OTB, VOT, UAV, TColor, DTB, NfS, LaSOT, TrackingNet and ILSVRC-VID) are supported.<br>
+> Add support for downloading VOT2019 (ST/LT/RGBD/RGBT) datasets.<br>
+> Fix the randomness in ILSVRC-VID ([issue #13](https://github.com/got-10k/toolkit/issues/13)).
 
 _Run experimenets over common tracking benchmarks (code from [siamfc](https://github.com/got-10k/siamfc/blob/master/test.py)):_
 
@@ -32,6 +34,7 @@ arXiv:1810.11981, 2018.
 * [How to Plot Success Curves?](#how-to-plot-success-curves)
 * [How to Loop Over GOT-10k Dataset?](#how-to-loop-over-got-10k-dataset)
 * [Issues](#issues)
+* [Contributors](#contributors)
 
 ### Installation
 
@@ -39,6 +42,12 @@ Install the toolkit using `pip` (recommended):
 
 ```bash
 pip install --upgrade got10k
+```
+
+Stay up-to-date:
+
+```bash
+pip install --upgrade git+https://github.com/got-10k/toolkit.git@master
 ```
 
 Or, alternatively, clone the repository and install dependencies:
@@ -49,7 +58,7 @@ cd toolkit
 pip install -r requirements.txt
 ```
 
-Then directly copy `got10k` folder to your workspace to use it.
+Then directly copy the `got10k` folder to your workspace to use it.
 
 ### Quick Start: A Concise Example
 
@@ -196,3 +205,7 @@ To loop over `OTB` or `VOT` datasets, simply change `GOT10k` to `OTB` or `VOT` f
 ### Issues
 
 Please report any problems or suggessions in the [Issues](https://github.com/got-10k/toolkit/issues) page.
+
+### Contributors
+
+- [Lianghua Huang](https://github.com/huanglianghua)

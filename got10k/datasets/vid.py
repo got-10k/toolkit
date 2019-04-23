@@ -70,7 +70,7 @@ class ImageNetVID(object):
         if os.path.isfile(cache_file):
             print('Dataset already cached.')
             with open(cache_file) as f:
-                seq_dict = json.load(f)
+                seq_dict = json.load(f, object_pairs_hook=OrderedDict)
             return seq_dict
         
         # image and annotation paths

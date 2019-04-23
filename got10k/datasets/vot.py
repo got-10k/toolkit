@@ -31,7 +31,8 @@ class VOT(object):
             of each sequence in ``__getitem__`` function, otherwise
             only returns ``img_files`` and ``anno``.
     """
-    __valid_versions = [2013, 2014, 2015, 2016, 2017, 2018, 'LT2018']
+    __valid_versions = [2013, 2014, 2015, 2016, 2017, 2018, 'LT2018',
+                        2019, 'LT2019', 'RGBD2019', 'RGBT2019']
 
     def __init__(self, root_dir, version=2017,
                  anno_type='rect', download=True, return_meta=False):
@@ -100,78 +101,89 @@ class VOT(object):
                 print('Files already downloaded.')
                 return
 
-        if version in range(2013, 2017 + 1):
-            version_str = 'vot%d' % version
-            url = 'http://data.votchallenge.net/%s/%s.zip' % (
-                version_str, version_str)
-            zip_file = os.path.join(root_dir, version_str + '.zip')
+        url = 'http://data.votchallenge.net/'
+        if version in range(2013, 2015 + 1):
+            # main challenge (2013~2015)
+            homepage = url + 'vot{}/dataset/'.format(version)
+        elif version in range(2015, 2019 + 1):
+            # main challenge (2016~2019)
+            homepage = url + 'vot{}/main/'.format(version)
+        elif version.startswith('LT'):
+            # long-term tracking challenge
+            year = int(version[2:])
+            homepage = url + 'vot{}/longterm/'.format(year)
+        elif version.startswith('RGBD'):
+            # RGBD tracking challenge
+            year = int(version[4:])
+            homepage = url + 'vot{}/rgbd/'.format(year)
+        elif version.startswith('RGBT'):
+            # RGBT tracking challenge
+            year = int(version[4:])
+            url = url + 'vot{}/rgbtir/'.format(year)
+            homepage = url + 'meta/'
+        
+        # download description file
+        bundle_url = homepage + 'description.json'
+        bundle_file = os.path.join(root_dir, 'description.json')
+        if not os.path.isfile(bundle_file):
+            print('Downloading description file...')
+            download(bundle_url, bundle_file)
 
-            print('Downloading to %s...' % zip_file)
-            download(url, zip_file)
-            print('\nExtracting to %s...' % root_dir)
-            extract(zip_file, root_dir)
-        else:
-            url = 'http://data.votchallenge.net/'
-            if version == 2018:
-                # main challenge
-                homepage = url + 'vot2018/main/'
-            elif version == 'LT2018':
-                # long-term tracking challenge
-                homepage = url + 'vot2018/longterm/'
-            
-            # download description file
-            bundle_url = homepage + 'description.json'
-            bundle_file = os.path.join(root_dir, 'description.json')
-            if not os.path.isfile(bundle_file):
-                print('Downloading description file...')
-                download(bundle_url, bundle_file)
+        # read description file
+        print('\nParsing description file...')
+        with open(bundle_file) as f:
+            bundle = json.load(f)
 
-            # read description file
-            print('\nParsing description file...')
-            with open(bundle_file) as f:
-                bundle = json.load(f)
+        # md5 generator
+        def md5(filename):
+            hash_md5 = hashlib.md5()
+            with open(filename, 'rb') as f:
+                for chunk in iter(lambda: f.read(4096), b""):
+                    hash_md5.update(chunk)
+            return hash_md5.hexdigest()
+        
+        # download all sequences
+        seq_names = []
+        for seq in bundle['sequences']:
+            seq_name = seq['name']
+            seq_names.append(seq_name)
 
-            # md5 generator
-            def md5(filename):
-                hash_md5 = hashlib.md5()
-                with open(filename, 'rb') as f:
-                    for chunk in iter(lambda: f.read(4096), b""):
-                        hash_md5.update(chunk)
-                return hash_md5.hexdigest()
-            
-            # download all sequences
-            seq_names = []
-            for seq in bundle['sequences']:
-                seq_name = seq['name']
-                seq_names.append(seq_name)
-                
-                # download image files
-                seq_url = url + seq['channels']['color']['url'][6:]
-                seq_file = os.path.join(root_dir, seq_name + '.zip')
+            # download channel (color/depth/ir) files
+            channels = seq['channels'].keys()
+            seq_files = []
+            for cn in channels:
+                seq_url = seq['channels'][cn]['url']
+                if not seq_url.startswith(('http', 'https')):
+                    seq_url = url + seq_url[seq_url.find('sequence'):]
+                seq_file = os.path.join(
+                    root_dir,
+                    '{}_{}.zip'.format(seq_name, cn))
                 if not os.path.isfile(seq_file) or \
-                    md5(seq_file) != seq['channels']['color']['checksum']:
+                    md5(seq_file) != seq['channels'][cn]['checksum']:
                     print('\nDownloading %s...' % seq_name)
                     download(seq_url, seq_file)
+                seq_files.append(seq_file)
 
-                # download annotations
-                anno_url = homepage + '%s.zip' % seq_name
-                anno_file = os.path.join(root_dir, seq_name + '_anno.zip')
-                if not os.path.isfile(anno_file) or \
-                    md5(anno_file) != seq['annotations']['checksum']:
-                    download(anno_url, anno_file)
+            # download annotations
+            anno_url = homepage + '%s.zip' % seq_name
+            anno_file = os.path.join(root_dir, seq_name + '_anno.zip')
+            if not os.path.isfile(anno_file) or \
+                md5(anno_file) != seq['annotations']['checksum']:
+                download(anno_url, anno_file)
 
-                # unzip compressed files
-                seq_dir = os.path.join(root_dir, seq_name)
-                if not os.path.isfile(seq_dir) or len(os.listdir(seq_dir)) < 10:
-                    print('Extracting %s...' % seq_name)
-                    os.makedirs(seq_dir)
+            # unzip compressed files
+            seq_dir = os.path.join(root_dir, seq_name)
+            if not os.path.isfile(seq_dir) or len(os.listdir(seq_dir)) < 10:
+                print('Extracting %s...' % seq_name)
+                os.makedirs(seq_dir)
+                for seq_file in seq_files:
                     extract(seq_file, seq_dir)
-                    extract(anno_file, seq_dir)
+                extract(anno_file, seq_dir)
 
-            # save list.txt
-            list_file = os.path.join(root_dir, 'list.txt')
-            with open(list_file, 'w') as f:
-                f.write(str.join('\n', seq_names))
+        # save list.txt
+        list_file = os.path.join(root_dir, 'list.txt')
+        with open(list_file, 'w') as f:
+            f.write(str.join('\n', seq_names))
 
         return root_dir
 
