@@ -21,17 +21,21 @@ class GOT10k(object):
         return_meta (string, optional): If True, returns ``meta``
             of each sequence in ``__getitem__`` function, otherwise
             only returns ``img_files`` and ``anno``.
+        list_file (string, optional): If provided, only read sequences
+            specified by the file instead of all sequences in the subset.
     """
-    def __init__(self, root_dir, subset='test', return_meta=False):
+    def __init__(self, root_dir, subset='test', return_meta=False,
+                 list_file=None):
         super(GOT10k, self).__init__()
         assert subset in ['train', 'val', 'test'], 'Unknown subset.'
-
         self.root_dir = root_dir
         self.subset = subset
         self.return_meta = False if subset == 'test' else return_meta
-        self._check_integrity(root_dir, subset)
+        
+        if list_file is None:
+            list_file = os.path.join(root_dir, subset, 'list.txt')
+        self._check_integrity(root_dir, subset, list_file)
 
-        list_file = os.path.join(root_dir, subset, 'list.txt')
         with open(list_file, 'r') as f:
             self.seq_names = f.read().strip().split('\n')
         self.seq_dirs = [os.path.join(root_dir, subset, s)
@@ -74,9 +78,10 @@ class GOT10k(object):
     def __len__(self):
         return len(self.seq_names)
 
-    def _check_integrity(self, root_dir, subset):
+    def _check_integrity(self, root_dir, subset, list_file=None):
         assert subset in ['train', 'val', 'test']
-        list_file = os.path.join(root_dir, subset, 'list.txt')
+        if list_file is None:
+            list_file = os.path.join(root_dir, subset, 'list.txt')
 
         if os.path.isfile(list_file):
             with open(list_file, 'r') as f:

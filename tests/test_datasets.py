@@ -33,7 +33,7 @@ class TestDatasets(unittest.TestCase):
         self._check_dataset(dataset)
     
     def test_vot(self):
-        root_dir = os.path.join(self.data_dir, 'vot2017')
+        root_dir = os.path.join(self.data_dir, 'vot2018')
         # without meta
         dataset = VOT(root_dir, anno_type='rect')
         self._check_dataset(dataset)

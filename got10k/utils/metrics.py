@@ -91,6 +91,8 @@ def poly_iou(polys1, polys2, bound=None):
         polys2 (numpy.ndarray): An N x 4 numpy array, each line represent a rectangle
             (left, top, width, height); or an N x 8 numpy array, each line represent
             the coordinates (x1, y1, x2, y2, x3, y3, x4, y4) of 4 corners.
+        bound (numpy.ndarray, optional): A 2 dimensional array, denotes the image bound
+            (width, height) for ``rects1`` and ``rects2``.
     """
     assert polys1.ndim in [1, 2]
     if polys1.ndim == 1:

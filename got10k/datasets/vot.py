@@ -30,12 +30,14 @@ class VOT(object):
         return_meta (string, optional): If True, returns ``meta``
             of each sequence in ``__getitem__`` function, otherwise
             only returns ``img_files`` and ``anno``.
+        list_file (string, optional): If provided, only read sequences
+            specified by the file.
     """
     __valid_versions = [2013, 2014, 2015, 2016, 2017, 2018, 'LT2018',
                         2019, 'LT2019', 'RGBD2019', 'RGBT2019']
 
-    def __init__(self, root_dir, version=2017,
-                 anno_type='rect', download=True, return_meta=False):
+    def __init__(self, root_dir, version=2017, anno_type='rect',
+                 download=True, return_meta=False, list_file=None):
         super(VOT, self).__init__()
         assert version in self.__valid_versions, 'Unsupport VOT version.'
         assert anno_type in ['default', 'rect'], 'Unknown annotation type.'
@@ -46,9 +48,11 @@ class VOT(object):
         if download:
             self._download(root_dir, version)
         self.return_meta = return_meta
-        self._check_integrity(root_dir, version)
 
-        list_file = os.path.join(root_dir, 'list.txt')
+        if list_file is None:
+            list_file = os.path.join(root_dir, 'list.txt')
+        self._check_integrity(root_dir, version, list_file)
+
         with open(list_file, 'r') as f:
             self.seq_names = f.read().strip().split('\n')
         self.seq_dirs = [os.path.join(root_dir, s) for s in self.seq_names]
@@ -187,9 +191,10 @@ class VOT(object):
 
         return root_dir
 
-    def _check_integrity(self, root_dir, version):
+    def _check_integrity(self, root_dir, version, list_file=None):
         assert version in self.__valid_versions
-        list_file = os.path.join(root_dir, 'list.txt')
+        if list_file is None:
+            list_file = os.path.join(root_dir, 'list.txt')
 
         if os.path.isfile(list_file):
             with open(list_file, 'r') as f:

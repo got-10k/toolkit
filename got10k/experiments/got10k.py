@@ -22,17 +22,22 @@ class ExperimentGOT10k(object):
     Args:
         root_dir (string): Root directory of GOT-10k dataset where
             ``train``, ``val`` and ``test`` folders exist.
+        subset (string): Specify ``train``, ``val`` or ``test``
+            subset of GOT-10k.
+        list_file (string, optional): If provided, only run experiments on
+            sequences specified by this file.
         result_dir (string, optional): Directory for storing tracking
             results. Default is ``./results``.
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
-    def __init__(self, root_dir, subset='val',
+    def __init__(self, root_dir, subset='val', list_file=None,
                  result_dir='results', report_dir='reports'):
         super(ExperimentGOT10k, self).__init__()
         assert subset in ['val', 'test']
         self.subset = subset
-        self.dataset = GOT10k(root_dir, subset=subset)
+        self.dataset = GOT10k(
+            root_dir, subset=subset, list_file=list_file)
         self.result_dir = os.path.join(result_dir, 'GOT-10k')
         self.report_dir = os.path.join(report_dir, 'GOT-10k')
         self.nbins_iou = 101

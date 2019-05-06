@@ -28,6 +28,8 @@ class ExperimentVOT(object):
             folders exist.
         version (integer, optional): Specify the VOT dataset version. Specify as
             one of 2013~2018. Default is 2017.
+        list_file (string, optional): If provided, only run experiments over
+            sequences specified by the file.
         read_image (boolean, optional): If True, return the read PIL image in
             each frame. Otherwise only return the image path. Default is True.
         experiments (string or tuple): Specify the type(s) of experiments to run.
@@ -37,7 +39,8 @@ class ExperimentVOT(object):
         report_dir (string, optional): Directory for storing performance
             evaluation results. Default is ``./reports``.
     """
-    def __init__(self, root_dir, version=2017, read_image=True,
+    def __init__(self, root_dir, version=2017,
+                 read_image=True, list_file=None,
                  experiments=('supervised', 'unsupervised', 'realtime'),
                  result_dir='results', report_dir='reports'):
         super(ExperimentVOT, self).__init__()
@@ -47,7 +50,7 @@ class ExperimentVOT(object):
                     for e in experiments])
         self.dataset = VOT(
             root_dir, version, anno_type='default',
-            download=True, return_meta=True)
+            download=True, return_meta=True, list_file=list_file)
         self.experiments = experiments
         if version == 'LT2018':
             version = '-' + version
