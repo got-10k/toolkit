@@ -19,7 +19,7 @@ class TrackingNet(object):
         subset (string, optional): Specify ``train`` or ``test``
             subset of TrackingNet.
     """
-    def __init__(self, root_dir, subset='test'):
+    def __init__(self, root_dir, subset='test', *args, **kwargs):
         super(TrackingNet, self).__init__()
         assert subset in ['train', 'test'], 'Unknown subset.'
 
@@ -36,6 +36,7 @@ class TrackingNet(object):
         self.anno_files = sorted(sum(self.anno_files, []))
         self.seq_dirs = [os.path.join(
             os.path.dirname(os.path.dirname(f)),
+            'frames',
             os.path.basename(f)[:-4])
             for f in self.anno_files]
         self.seq_names = [os.path.basename(d) for d in self.seq_dirs]
@@ -56,10 +57,15 @@ class TrackingNet(object):
         
         img_files = glob.glob(
             os.path.join(self.seq_dirs[index], '*.jpg'))
-        img_files = sorted(img_files, key=lambda x: int(x[:-4]))
+        img_files = sorted(img_files, key=lambda x: int(os.path.basename(x)[:-4]))
         anno = np.loadtxt(self.anno_files[index], delimiter=',')
-        assert len(img_files) == len(anno)
-        assert anno.shape[1] == 4
+        # from IPython import embed;embed()
+        if self.subset=='train':
+            assert len(img_files) == len(anno)
+            assert anno.shape[1] == 4
+        elif self.subset=='test':
+            assert anno.shape[0] == 4
+        anno = anno.reshape(-1, 4)
         
         return img_files, anno
 
