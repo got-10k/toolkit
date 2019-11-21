@@ -76,9 +76,9 @@ class VOT(object):
             index = self.seq_names.index(index)
 
         img_files = sorted(glob.glob(
-            os.path.join(self.seq_dirs[index], '*.jpg')))
+            os.path.join(self.seq_dirs[index], 'color', '*.jpg')))
         anno = np.loadtxt(self.anno_files[index], delimiter=',')
-        assert len(img_files) == len(anno)
+        assert len(img_files) == len(anno), (len(img_files), len(anno))
         assert anno.shape[1] in [4, 8]
         if self.anno_type == 'rect' and anno.shape[1] == 8:
             anno = self._corner2rect(anno)

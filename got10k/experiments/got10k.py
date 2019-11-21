@@ -9,6 +9,7 @@ import time
 import matplotlib.pyplot as plt
 import matplotlib
 from PIL import Image
+import cv2
 
 from ..datasets import GOT10k
 from ..utils.metrics import rect_iou
@@ -32,18 +33,19 @@ class ExperimentGOT10k(object):
             evaluation results. Default is ``./reports``.
     """
     def __init__(self, root_dir, subset='val', list_file=None,
-                 result_dir='results', report_dir='reports'):
+                 result_dir='results', report_dir='reports', use_dataset=True):
         super(ExperimentGOT10k, self).__init__()
         assert subset in ['val', 'test']
         self.subset = subset
-        self.dataset = GOT10k(
-            root_dir, subset=subset, list_file=list_file)
+        if use_dataset:
+            self.dataset = GOT10k(
+                root_dir, subset=subset, list_file=list_file)
         self.result_dir = os.path.join(result_dir, 'GOT-10k')
         self.report_dir = os.path.join(report_dir, 'GOT-10k')
         self.nbins_iou = 101
         self.repetitions = 3
 
-    def run(self, tracker, visualize=False):
+    def run(self, tracker, visualize=False, save_video=False):
         if self.subset == 'test':
             print('\033[93m[WARNING]:\n' \
                   'The groundtruths of GOT-10k\'s test set is withholded.\n' \
@@ -88,7 +90,32 @@ class ExperimentGOT10k(object):
                 # record results
                 self._record(record_file, boxes, times)
 
-    def report(self, tracker_names):
+            # save videos
+            if save_video:
+                video_dir = os.path.join(os.path.dirname(os.path.dirname(self.result_dir)),
+                    'videos', 'GOT-10k', tracker.name)
+                video_file = os.path.join(video_dir, '%s.avi' % seq_name)
+
+                if not os.path.isdir(video_dir):
+                    os.makedirs(video_dir)
+                image = Image.open(img_files[0])
+                img_W, img_H = image.size
+                out_video = cv2.VideoWriter(video_file, cv2.VideoWriter_fourcc(*'MJPG'), 10, (img_W, img_H))
+                for ith, (img_file, pred) in enumerate(zip(img_files, boxes)):
+                    image = Image.open(img_file)
+                    if not image.mode == 'RGB':
+                        image = image.convert('RGB')
+                    img = np.array(image)[:, :, ::-1].copy()
+                    pred = pred.astype(int)
+                    cv2.rectangle(img, (pred[0], pred[1]), (pred[0] + pred[2], pred[1] + pred[3]), self.color['pred'], 2)
+                    if ith < anno.shape[0]:
+                        gt = anno[ith].astype(int)
+                        cv2.rectangle(img, (gt[0], gt[1]), (gt[0] + gt[2], gt[1] + gt[3]), self.color['gt'], 2)
+                    out_video.write(img)
+                out_video.release()
+                print('  Videos saved at', video_file)
+
+    def report(self, tracker_names, plot_curves=True):
         assert isinstance(tracker_names, (list, tuple))
 
         if self.subset == 'test':
@@ -190,7 +217,8 @@ class ExperimentGOT10k(object):
             with open(report_file, 'w') as f:
                 json.dump(performance, f, indent=4)
             # plot success curves
-            self.plot_curves([report_file], tracker_names)
+            if plot_curves:
+                self.plot_curves([report_file], tracker_names)
 
             return performance
 
@@ -237,6 +265,9 @@ class ExperimentGOT10k(object):
         if not os.path.isdir(record_dir):
             os.makedirs(record_dir)
         np.savetxt(record_file, boxes, fmt='%.3f', delimiter=',')
+        while not os.path.exists(record_file):
+            print('warning: recording failed, retrying...')
+            np.savetxt(record_file, boxes, fmt='%.3f', delimiter=',')
         print('  Results recorded at', record_file)
 
         # record running times
@@ -276,13 +307,14 @@ class ExperimentGOT10k(object):
             speed_fps = -1
 
         # success curve
-        thr_iou = np.linspace(0, 1, 101)
+        # thr_iou = np.linspace(0, 1, 101)
+        thr_iou = np.linspace(0, 1, self.nbins_iou)
         bin_iou = np.greater(ious[:, None], thr_iou[None, :])
         succ_curve = np.mean(bin_iou, axis=0)
 
         return ao, sr, speed_fps, succ_curve
 
-    def plot_curves(self, report_files, tracker_names):
+    def plot_curves(self, report_files, tracker_names, extension='.png'):
         assert isinstance(report_files, list), \
             'Expected "report_files" to be a list, ' \
             'but got %s instead' % type(report_files)
@@ -297,8 +329,11 @@ class ExperimentGOT10k(object):
             with open(report_file) as f:
                 performance.update(json.load(f))
 
-        succ_file = os.path.join(report_dir, 'success_plot.png')
+        succ_file = os.path.join(report_dir, 'success_plot'+extension)
         key = 'overall'
+        
+        # filter performance by tracker_names
+        performance = {k:v for k,v in performance.items() if k in tracker_names}
 
         # sort trackers by AO
         tracker_names = list(performance.keys())
@@ -323,8 +358,8 @@ class ExperimentGOT10k(object):
             legends.append('%s: [%.3f]' % (
                 name, performance[name][key]['ao']))
         matplotlib.rcParams.update({'font.size': 7.4})
-        legend = ax.legend(lines, legends, loc='center left',
-                           bbox_to_anchor=(1, 0.5))
+        legend = ax.legend(lines, legends, loc='lower left',
+                           bbox_to_anchor=(0., 0.))
         
         matplotlib.rcParams.update({'font.size': 9})
         ax.set(xlabel='Overlap threshold',
@@ -333,6 +368,9 @@ class ExperimentGOT10k(object):
                title='Success plots on GOT-10k')
         ax.grid(True)
         fig.tight_layout()
+        
+        # control ratio
+        # ax.set_aspect('equal', 'box')
 
         print('Saving success plots to', succ_file)
         fig.savefig(succ_file,

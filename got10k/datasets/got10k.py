@@ -25,7 +25,7 @@ class GOT10k(object):
             specified by the file instead of all sequences in the subset.
     """
     def __init__(self, root_dir, subset='test', return_meta=False,
-                 list_file=None):
+                 list_file=None, check_integrity=True):
         super(GOT10k, self).__init__()
         assert subset in ['train', 'val', 'test'], 'Unknown subset.'
         self.root_dir = root_dir
@@ -34,7 +34,8 @@ class GOT10k(object):
         
         if list_file is None:
             list_file = os.path.join(root_dir, subset, 'list.txt')
-        self._check_integrity(root_dir, subset, list_file)
+        if check_integrity:
+            self._check_integrity(root_dir, subset, list_file)
 
         with open(list_file, 'r') as f:
             self.seq_names = f.read().strip().split('\n')
