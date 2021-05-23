@@ -16,17 +16,15 @@ For convenience, the toolkit also provides unofficial implementation of dataset 
 [GOT-10k](http://got-10k.aitestunion.com/) is a large, high-diversity and one-shot database for training and evaluating generic purposed visual trackers. If you use the GOT-10k database or toolkits for a research publication, please consider citing:
 
 ```Bibtex
-@article{Huang_2019,
-  title={GOT-10k: A Large High-Diversity Benchmark for Generic Object Tracking in the Wild},
-  ISSN={1939-3539},
-  url={http://dx.doi.org/10.1109/TPAMI.2019.2957464},
-  DOI={10.1109/tpami.2019.2957464},
-  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  publisher={Institute of Electrical and Electronics Engineers (IEEE)},
+@ARTICLE{8922619,
   author={Huang, Lianghua and Zhao, Xin and Huang, Kaiqi},
-  year={2019},
-  pages={1–1}
-}
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={GOT-10k: A Large High-Diversity Benchmark for Generic Object Tracking in the Wild}, 
+  year={2021},
+  volume={43},
+  number={5},
+  pages={1562-1577},
+  doi={10.1109/TPAMI.2019.2957464}}
 ```
 
 &emsp;\[[Project](http://got-10k.aitestunion.com/)\]\[[PDF](https://arxiv.org/abs/1810.11981)\]\[[Bibtex](http://got-10k.aitestunion.com/bibtex)\]
